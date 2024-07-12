@@ -1,7 +1,9 @@
-import re
 import asyncio
-import aiohttp
+import re
 import ssl
+
+import aiohttp
+from aiohttp import ClientConnectorError
 from bs4 import BeautifulSoup
 
 from config.data import SLEEP
@@ -10,13 +12,25 @@ from function.parsing import city_parsing, translate_language
 
 
 async def fetch(session, url, ssl_context):
-    async with session.get(url, ssl=ssl_context) as response:
-        return await response.text(), response.status
+    while True:
+        try:
+            async with session.get(url, ssl=ssl_context) as response:
+                return await response.text(), response.status
+        except ClientConnectorError as e:
+            print(f'Connection error: {e}')
+            print('Retrying in 5 minutes...')
+            await asyncio.sleep(300)  # Задержка в 5 минут
 
 
 async def fetch_listing(session, url, msg_id, ssl_context):
-    async with session.get(f'{url}{msg_id}', ssl=ssl_context) as response:
-        return await response.text(), response.status
+    while True:
+        try:
+            async with session.get(f'{url}{msg_id}', ssl=ssl_context) as response:
+                return await response.text(), response.status
+        except ClientConnectorError as e:
+            print(f'Connection error: {e}')
+            print('Retrying in 5 minutes...')
+            await asyncio.sleep(300)  # Задержка в 5 минут
 
 
 async def main():
@@ -79,7 +93,7 @@ async def main():
                     estate_data['language'] = language_code
                     estate_data['msg_ru'] = msg_ru
                     estate_data['msg_en'] = msg_en
-                    estate_data['msg_en'] = msg_el
+                    estate_data['msg_el'] = msg_el
 
                     estate_data['url'] = f'{url}{msg_id}'
 
