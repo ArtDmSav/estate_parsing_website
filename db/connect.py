@@ -30,7 +30,7 @@ async def get_last_msg_id(group_id: str) -> int:
 async def insert_estates_web(estates: list) -> None:
     async with async_session() as session:
         async with session.begin():
-            for estate in estates:
+            for estate in reversed(estates):
                 new_estate = Estate(
                     datetime=func.now(),
                     city=estate['city'],
