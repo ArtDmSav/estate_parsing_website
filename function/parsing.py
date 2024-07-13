@@ -28,7 +28,7 @@ async def city_parsing(msg: str) -> str:
 
 
 # tupe[language_code, msg_ru, msg_en, msg_el]
-async def translate_language(msg: str) -> tuple[str, str, str, str]:
+async def translate_language(msg: str, price: int) -> tuple[str, str, str, str]:
     DetectorFactory.seed = 0
 
     async def detect_language(msg: str) -> str:
@@ -44,19 +44,22 @@ async def translate_language(msg: str) -> tuple[str, str, str, str]:
         loop = asyncio.get_event_loop()
         translate_partial = partial(GoogleTranslator(src, dest).translate, msg)
         msg_ru = await loop.run_in_executor(None, translate_partial)
-        return f'{msg_ru}\n\n____________________________\nПереведено с помощью Гугл Переводчика'
+        return (f'{msg_ru}\nСтоимость аренды: {price} €'
+                f'\n\n____________________________\nПереведено с помощью Гугл Переводчика')
 
     async def translate_en(src: str, msg: str = msg, dest: str = 'en') -> str:
         loop = asyncio.get_event_loop()
         translate_partial = partial(GoogleTranslator(src, dest).translate, msg)
         msg_en = await loop.run_in_executor(None, translate_partial)
-        return f'{msg_en}\n\n____________________________\nTranslated using Google Translator'
+        return (f'{msg_en}\nRent price: {price} €'
+                f'\n\n____________________________\nTranslated using Google Translator')
 
     async def translate_el(src: str, msg: str = msg, dest: str = 'el') -> str:
         loop = asyncio.get_event_loop()
         translate_partial = partial(GoogleTranslator(src, dest).translate, msg)
         msg_el = await loop.run_in_executor(None, translate_partial)
-        return f'{msg_el}\n\n____________________________\nΜεταφράστηκε χρησιμοποιώντας το Google Translator'
+        return (f'{msg_el}\nΤιμή ενοικίασης: {price} €'
+                f'\n\n____________________________\nΜεταφράστηκε χρησιμοποιώντας το Google Translator')
 
     msg_language = await detect_language(msg)
 

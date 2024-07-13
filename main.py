@@ -89,7 +89,8 @@ async def main():
                     description_div = soup_msg_id.find('div', itemprop='description')
                     description = description_div.find('p').text if price_span else ''
                     estate_data['msg'] = description
-                    language_code, msg_ru, msg_en, msg_el = await translate_language(estate_data['msg'])
+                    language_code, msg_ru, msg_en, msg_el = await translate_language(estate_data['msg'],
+                                                                                     estate_data['price'])
                     estate_data['language'] = language_code
                     estate_data['msg_ru'] = msg_ru
                     estate_data['msg_en'] = msg_en
@@ -108,6 +109,7 @@ async def main():
                     estates.append(estate_data)
                     await asyncio.sleep(2)
                 await insert_estates_web(estates) if estates else print(f"Список пуст = {estates}")
+                print('---------------- pause 5 min ----------------')
 
             else:
                 print(f'Failed to retrieve the page. Status code: {status_code}')
