@@ -1,6 +1,7 @@
 check len(finish_msg) < than 4096 symbols
 add skan other param
 i need understand, how i can better/effective keep(storage) estate images
+check dublicate
 
 add fields: Estate.pictures, Estate.pets, Estate.long_msg
 

@@ -1,5 +1,6 @@
 import asyncio
 import ssl
+from datetime import datetime
 
 import aiohttp
 from aiohttp import ClientConnectorError
@@ -52,13 +53,11 @@ async def bazaraki_start():
                 estates = []
                 if status_code == 200:
                     soup = BeautifulSoup(response_text, 'html.parser')
-
                     listings = soup.find_all('div', class_='advert js-item-listing')
 
                     for listing in listings:
                         estate_data = {}
-
-                        # Извлечение значения атрибута id
+                        # Извлечение id объявления
                         msg_id = int(listing.get('id')) if listing else 0
 
                         print(f'msg_id: {msg_id}')
@@ -118,4 +117,5 @@ async def bazaraki_start():
                     print(f'Failed to retrieve the page bazaraki_com. Status code: {status_code}')
 
         print(f'---------------- pause {SLEEP / 60} min to bazaraki_com ----------------')
+        print(f'---------------- {datetime.now()} ----------------')
         await asyncio.sleep(SLEEP)

@@ -1,6 +1,7 @@
 import asyncio
 import re
 import ssl
+from datetime import datetime
 
 import aiohttp
 from aiohttp import ClientConnectorError
@@ -107,4 +108,6 @@ async def dom_start():
                 print(f'Failed to retrieve the page dom_com_cy. Status code: {status_code}')
 
         print(f'---------------- pause {SLEEP / 60} min to dom_com_cy ----------------')
+        print(f'---------------- {datetime.now()} ----------------')
+
         await asyncio.sleep(SLEEP)
