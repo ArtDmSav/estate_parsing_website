@@ -84,7 +84,6 @@ async def dom_start():
 
                     price_div = soup_msg_id.find('div', itemprop='offers')
                     price_span = price_div.find_all('span')[1]  # Второй <span> содержит видимую цену
-                    price = int(price_span.text) if price_span else ''
                     if price_span:
                         price_text = price_span.text.replace(' ', '')
                         if price_text.isdigit():
@@ -96,7 +95,7 @@ async def dom_start():
                     estate_data['price'] = price
 
                     description_div = soup_msg_id.find('div', itemprop='description')
-                    description = description_div.find('p').text if price_span else ''
+                    description = description_div.find('p').text if description_div else ''
                     estate_data['msg'] = description
                     language_code, msg_ru, msg_en, msg_el = await translate_language(estate_data['msg'],
                                                                                      estate_data['price'])
