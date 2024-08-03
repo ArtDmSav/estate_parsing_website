@@ -89,9 +89,9 @@ async def dom_start():
                         if price_text.isdigit():
                             price = int(price_text)
                         else:
-                            price = ''
+                            price = 0
                     else:
-                        price = ''
+                        price = 0
                     estate_data['price'] = price
 
                     description_div = soup_msg_id.find('div', itemprop='description')
