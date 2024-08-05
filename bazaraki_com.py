@@ -3,7 +3,7 @@ import ssl
 from datetime import datetime
 
 import aiohttp
-from aiohttp import ClientConnectorError
+from aiohttp import ClientConnectorError, ClientPayloadError
 from bs4 import BeautifulSoup
 
 from config.data import SLEEP
@@ -27,10 +27,13 @@ async def fetch_listing(session, url, msg_id, ssl_context):
         try:
             async with session.get(f'{url}{msg_id}', ssl=ssl_context) as response:
                 return await response.text(), response.status
-        except ClientConnectorError as e:
-            print(f'Connection bazaraki_com error: {e}')
+        except (ClientConnectorError, ClientPayloadError) as e:
+            print(f'dom_com_cy error: {e}')
             print('Retrying in 5 minutes...')
             await asyncio.sleep(300)  # Задержка в 5 минут
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            await asyncio.sleep(300)
 
 
 async def bazaraki_start():
@@ -46,6 +49,7 @@ async def bazaraki_start():
         ssl_context.verify_mode = ssl.CERT_NONE
 
         for type_estate in types_estate:
+
             async with aiohttp.ClientSession() as session:
                 response_text, status_code = await fetch(session, f'{url}{estate_to_rent}{type_estate}', ssl_context)
 
